@@ -66,12 +66,9 @@ jobs:
           asset_name: payload.dd
           asset_content_type: application/octet-stream
 
-      - name: Notify Discord on Failure
-        uses: jakejarvis/send-discord-message@main
+      - name: Discord notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
         with:
-          webhook_url: 'https://discord.com/api/webhooks/1302674995280871545/fsmwXtFfChCn7ktcF3Gy8Pu0mv8YeOv9Izht3yC7Kstm5gHsa8ovmSvepksTpKXc7ICe'
-          message: |
-            - **Repository**: ${{ github.repository }}
-            - **Workflow**: ${{ github.workflow }}
-            - **Commit**: ${{ github.sha }}
-            - **Status**: Succes
+          args: 'The project {{ EVENT_PAYLOAD.repository.full_name }} has been deployed.'
