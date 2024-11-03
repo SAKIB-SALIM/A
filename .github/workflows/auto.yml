@@ -6,10 +6,6 @@ on:
       - main
 
   workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version number (e.g., v1.0.0)'
-        required: true
 
 jobs:
   build-and-release:
@@ -21,14 +17,6 @@ jobs:
         uses: actions/checkout@v3
 
       # Step 2: Set up Python
-      - name: Set version
-        id: set_version
-        run: |
-          if (${{ github.event_name }} -eq 'push') {
-            echo "version=AV1.0.0" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          } else {
-            echo "version=${{ github.event.inputs.version }}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          }
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -53,13 +41,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.event.inputs.version }}
-          release_name: Release ${{ github.event.inputs.version }}
+          tag_name: 'AV1.0.1'
+          release_name: Release 'AV1.0.1'
           draft: false
           prerelease: false
 
       - name: Upload WindowsNt.exe to release
-        uses: actions/upload-release-asset@v1
+        uses: actions/upload-release-asset@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -69,7 +57,7 @@ jobs:
           asset_content_type: application/octet-stream
 
       - name: Upload payload.dd to release
-        uses: actions/upload-release-asset@v1
+        uses: actions/upload-release-asset@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
