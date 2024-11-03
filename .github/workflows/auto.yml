@@ -3,19 +3,17 @@ name: Build and Release The Executable
 on:
   push:
     branches:
-      - main  # Specify branches as needed
+      - main
+
   workflow_dispatch:
     inputs:
       version:
         description: 'Version number (e.g., v1.0.0)'
-        required: false  # Now optional for manual runs
+        required: true
 
 jobs:
   build-and-release:
     runs-on: windows-latest
-
-    env:
-      VERSION: ${{ github.event.inputs.version || 'autoV1.0.0' }}
 
     steps:
       # Step 1: Check out the repository
@@ -23,6 +21,15 @@ jobs:
         uses: actions/checkout@v3
 
       # Step 2: Set up Python
+      - name: Set version
+        id: set_version
+        run: |
+          if (${{ github.event_name }} -eq 'push') {
+            echo "version=AV1.0.0" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          } else {
+            echo "version=${{ github.event.inputs.version }}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          }
+
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
@@ -46,12 +53,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ env.VERSION }}
-          release_name: Release ${{ env.VERSION }}
+          tag_name: ${{ github.event.inputs.version }}
+          release_name: Release ${{ github.event.inputs.version }}
           draft: false
           prerelease: false
 
-      # Step 6: Upload WindowsNt.exe to release
       - name: Upload WindowsNt.exe to release
         uses: actions/upload-release-asset@v1
         env:
@@ -62,13 +68,7 @@ jobs:
           asset_name: WindowsNt.exe
           asset_content_type: application/octet-stream
 
-      # Step 7: Check if payload.dd exists before uploading
-      - name: Check if payload.dd exists
-        run: |
-          if [ -f "payload.dd" ]; then echo "exists=true" >> $GITHUB_ENV; else echo "exists=false" >> $GITHUB_ENV; fi
-
       - name: Upload payload.dd to release
-        if: env.exists == 'true'
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -77,15 +77,3 @@ jobs:
           asset_path: payload.dd
           asset_name: payload.dd
           asset_content_type: application/octet-stream
-
-      # Step 8: Send status to Discord webhook
-      - name: Notify Discord
-        if: always()  # Ensures this step runs regardless of success or failure
-        env:
-          WEBHOOK_URL: https://discord.com/api/webhooks/1302674995280871545/fsmwXtFfChCn7ktcF3Gy8Pu0mv8YeOv9Izht3yC7Kstm5gHsa8ovmSvepksTpKXc7ICe
-        run: |
-          status="${{ job.status }}"
-          version="${{ env.VERSION }}"
-          job_name="${{ github.job }}"
-          run_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"Workflow *Build and Release The Executable* completed.\n**Status**: $status\n**Version**: $version\n**Job**: $job_name\n[View Run]($run_url)\"}" $WEBHOOK_URL
