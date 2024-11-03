@@ -1,3 +1,9 @@
+
+
+
+
+
+
 name: Build and Release The Executable
 
 on:
@@ -34,9 +40,17 @@ jobs:
         run: |
           pyinstaller --onefile --icon icon.ico -w WindowsNt.py
 
-      - name: Set version
+
+      - name: Generate random tag name
+        id: generate_tag
+        shell: pwsh
         run: |
-          python n.py
+          $timestamp = Get-Date -Format "yyyyMMddHHmmss"     # Current date and time
+          $randomString = -join ((65..90) + (97..122) | Get-Random -Count 6 | ForEach-Object {[char]$_}) # 6-char random string
+          $tagName = "v$timestamp-$randomString"
+          Write-Output "Generated tag: $tagName"
+          echo "TAG_NAME=$tagName" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8
+          echo "Created and pushed tag $env:TAG_NAME"
 
       # Step 5: Create GitHub Release and Upload the .exe
       - name: Create GitHub Release
@@ -45,7 +59,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ vars.K }}
+          tag_name: ${{ env.TAG_NAME }}
           release_name: Release ${{ github.sha }}
           draft: false
           prerelease: false
