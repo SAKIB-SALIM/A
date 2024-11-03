@@ -84,5 +84,5 @@ jobs:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           description: |
             Tag name `${{ env.TAG_NAME}}`
-            Click [here](https://github.com/SAKIB-SALIM/A/releases/latest) to visit!
+            Click [here](https://github.com/SAKIB-SALIM/A/releases/tag/${{ env.TAG_NAME }}) to visit!
           color: 0xff91a4
