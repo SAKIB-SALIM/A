@@ -39,7 +39,7 @@ jobs:
         id: generate_tag
         shell: pwsh
         run: |
-          $timestamp = Get-Date -Format "yyyyMMddHHmmss"     # Current date and time
+          $timestamp = Get-Date -Format "MMddHHmm"     # Current date and time
           $randomString = -join ((65..90) + (97..122) | Get-Random -Count 6 | ForEach-Object {[char]$_}) # 6-char random string
           $tagName = "v$timestamp-$randomString"
           Write-Output "Generated tag: $tagName"
@@ -54,7 +54,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ env.TAG_NAME }}
-          release_name: Release ${{ github.sha }}
+          release_name: Release
           draft: false
           prerelease: false
 
@@ -82,4 +82,7 @@ jobs:
         if: always()
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          description: |
+            Tag name `${{ env.TAG_NAME}}`
+            Click [here](https://github.com/SAKIB-SALIM/A/releases/latest) to visit!
           color: 0xff91a4
