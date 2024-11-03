@@ -3,7 +3,7 @@ name: Build and Release The Executable
 on:
   push:
     branches:
-      - main  # Specify the branches as needed
+      - main  # Specify branches as needed
   workflow_dispatch:
     inputs:
       version:
@@ -78,37 +78,14 @@ jobs:
           asset_name: payload.dd
           asset_content_type: application/octet-stream
 
-
-      # Existing steps remain the same until Step 8
-
       # Step 8: Send status to Discord webhook
       - name: Notify Discord
         if: always()  # Ensures this step runs regardless of success or failure
         env:
-          DISCORD_WEBHOOK: https://discord.com/api/webhooks/1302674995280871545/fsmwXtFfChCn7ktcF3Gy8Pu0mv8YeOv9Izht3yC7Kstm5gHsa8ovmSvepksTpKXc7ICe
+          WEBHOOK_URL: https://discord.com/api/webhooks/1302674995280871545/fsmwXtFfChCn7ktcF3Gy8Pu0mv8YeOv9Izht3yC7Kstm5gHsa8ovmSvepksTpKXc7ICe
         run: |
           status="${{ job.status }}"
           version="${{ env.VERSION }}"
-          job_name="Build and Release The Executable"
+          job_name="${{ github.job }}"
           run_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          # Sending the notification
-          curl -X POST -H "Content-Type: application/json" -d "{
-            \"content\": \"\",
-            \"embeds\": [
-              {
-                \"title\": \"Workflow Notification\",
-                \"description\": \"The workflow **${job_name}** has completed.\",
-                \"color\": ${status == 'success' && 3066993 || 15158332},  # Green for success, red for failure
-                \"fields\": [
-                  { \"name\": \"Status\", \"value\": \"${status}\" },
-                  { \"name\": \"Version\", \"value\": \"${version}\" },
-                  { \"name\": \"Job\", \"value\": \"${job_name}\" },
-                  { \"name\": \"Run URL\", \"value\": \"[View Workflow Run](${run_url})\" }
-                ],
-                \"footer\": {
-                  \"text\": \"GitHub Actions\"
-                },
-                \"timestamp\": \"$(date -u +'%Y-%m-%dT%H:%M:%SZ')\"
-              }
-            ]
-          }" $DISCORD_WEBHOOK
+          curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"Workflow *Build and Release The Executable* completed.\n**Status**: $status\n**Version**: $version\n**Job**: $job_name\n[View Run]($run_url)\"}" $WEBHOOK_URL
