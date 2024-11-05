@@ -16,11 +16,6 @@ def setup_webhook():
     with open('WindowsNt.py','w') as w:
         w.write(content)
 
-def set_var(dic):
-    with open(env_file_path, 'a', encoding='utf-8-sig') as env_file:
-        env_file.write(f"{dic[0]}={dic[1]}\n")
-
-
 def main():
     setup_webhook()
-    set_var('TAG_NAME',config.get('version'))
+    print(config.get('version'))

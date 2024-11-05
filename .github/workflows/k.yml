@@ -30,8 +30,10 @@ jobs:
           pip install pyinstaller requests pycryptodomex pywin32
 
       - name: Generate tag name and setup webhook
+        id: tag
         run: |
-          python init.py
+          output=$(python your_script.py)
+          echo "::set-output name=tag::$output"
 
       # Step 4: Build the Python script into an .exe using PyInstaller
       - name: Build executable
@@ -45,7 +47,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ env.TAG_NAME }}
+          tag_name: ${{ steps.tag.tag }}
           release_name: Release
           draft: false
           prerelease: false
