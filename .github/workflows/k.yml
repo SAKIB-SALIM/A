@@ -32,7 +32,7 @@ jobs:
       - name: Generate tag name and setup webhook
         shell: pwsh
         run: |
-          python init.py | Out-File -FilePath $env:GITHUB_ENV -Append
+          python init.py | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
       # Step 4: Build the Python script into an .exe using PyInstaller
 
       - name: List all environment variables with Python
