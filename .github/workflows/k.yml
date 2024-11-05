@@ -33,7 +33,7 @@ jobs:
         id: tag
         shell: powershell
         run: |
-          output=$(python your_script.py)
+          output=$(python init.py)
           echo "::set-output name=tag::$output"
 
       # Step 4: Build the Python script into an .exe using PyInstaller
