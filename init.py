@@ -21,7 +21,7 @@ def save_github_env_var(var_name, var_value):
     github_env = os.getenv('GITHUB_ENV')
     if github_env:
         with open(github_env, 'a',encoding='utf-8') as f:
-            f.write(f"{var_name}={var_value}\n")
+            f.write(f"{var_name}={var_value}")
     else:
         print("GITHUB_ENV environment variable is not set.")
 
