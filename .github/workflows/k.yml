@@ -30,11 +30,8 @@ jobs:
           pip install pyinstaller requests pycryptodomex pywin32
 
       - name: Generate tag name and setup webhook
-        id: tag
-        shell: powershell
         run: |
-          $output = python init.py
-          echo "::set-output name=tag::$($output.Trim())"
+          python init.py
       # Step 4: Build the Python script into an .exe using PyInstaller
       - name: Build executable
         run: |
