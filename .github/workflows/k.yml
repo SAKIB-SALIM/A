@@ -33,9 +33,8 @@ jobs:
         id: tag
         shell: powershell
         run: |
-          output=$(python init.py)
-          echo "::set-output name=tag::$output"
-
+          $output = python init.py
+          echo "::set-output name=tag::$($output.Trim())"
       # Step 4: Build the Python script into an .exe using PyInstaller
       - name: Build executable
         run: |
