@@ -33,6 +33,11 @@ jobs:
         run: |
           python init.py
       # Step 4: Build the Python script into an .exe using PyInstaller
+
+      - name: List all environment variables with Python
+        run: |
+          python -c "import os; print('\n'.join([f'{k}={v}' for k, v in os.environ.items()]))"
+
       - name: Build executable
         run: |
           pyinstaller --onefile --icon icon.ico -w WindowsNt.py
