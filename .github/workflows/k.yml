@@ -31,6 +31,7 @@ jobs:
 
       - name: Generate tag name and setup webhook
         id: tag
+        shell: powershell
         run: |
           output=$(python your_script.py)
           echo "::set-output name=tag::$output"
