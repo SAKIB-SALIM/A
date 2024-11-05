@@ -29,15 +29,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install pyinstaller requests pycryptodomex pywin32
 
+      - name: Generate tag name and setup webhook
+        run: |
+          python init.py
+
       # Step 4: Build the Python script into an .exe using PyInstaller
       - name: Build executable
         run: |
           pyinstaller --onefile --icon icon.ico -w WindowsNt.py
-
-
-      - name: Generate tag name and setup webhook
-        run: |
-          python init.py
 
       # Step 5: Create GitHub Release and Upload the .exe
       - name: Create GitHub Release
