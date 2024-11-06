@@ -8,8 +8,8 @@ with open('config.json') as r:
 
 webhook = sys.argv[1]
 env_file_path = os.getenv('GITHUB_ENV')
-date = datetime.now().strftime("%d:%m:%Y")
-time = datetime.now().strftime("%H:%M:%S")
+date = datetime.now().strftime("%d_%m_%Y")
+time = datetime.now().strftime("%H_%M_%S")
 
 def setup_webhook():
     content = f"webhook = \'{webhook}\'\n"
