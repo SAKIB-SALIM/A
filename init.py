@@ -21,7 +21,7 @@ def setup_webhook():
 
 def main():
     setup_webhook()
-    print(f'TAG_NAME={config.get("version")}',end='')
+    print(f'TAG_NAME={config.get("version")}-{date}-{time}',end='')
 
 if __name__ == '__main__':
     main()
